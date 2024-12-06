@@ -8,7 +8,7 @@ const style = StyleSheet.create({
     },
     body: {
         flex: 1,
-        backgroundColor: "tomato",
+        backgroundColor: "white",
         alignItems: "center",
         justifyContent: "center",
         // borderWidth: 1
