@@ -33,6 +33,7 @@ const TTSPage = () => {
       return;
     }
 
+    // only selected LanguageCode can be synthesized
     const requestBody = {
       input: { text: inputValue },
       voice: {
