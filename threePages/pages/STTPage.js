@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { style } from './index';
+import  style  from './styles';
 
 const STTPage = () => {
   const navigation = useNavigation();

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { style } from './index';
+import style from './styles';
 import axios from 'axios';
 import { Audio } from 'expo-av';
 import { TTS_API_KEY } from '@env';
+import { Picker } from '@react-native-picker/picker';
+
 
 const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${TTS_API_KEY}`;
 
@@ -23,9 +25,46 @@ const TTSPage = () => {
   };
   
   const [inputValue, setInputValue] = useState('');
-  const [displayText, setDisplayText] = useState('New');
+  const [displayText, setDisplayText] = useState('');
   const [audioURI, setAudioURI] = useState(null);
   const [sound, setSound] = useState(null);
+
+  const [selectedLanguage, setSelectedLanguage] = useState('en-US');
+  const [selectedVoice, setSelectedVoice] = useState('en-US-Standard-A');
+  const englishVoices = [
+    "en-US-Standard-A",
+    "en-US-Standard-B",
+    "en-US-Standard-C",
+    "en-US-Standard-D",
+    "en-US-Standard-E",
+    "en-US-Standard-F",
+    "en-US-Standard-G",
+    "en-US-Standard-H",
+    "en-US-Standard-I",
+    "en-US-Standard-J"
+  ];
+  
+  const koreanVoices = [
+    "ko-KR-Standard-A",
+    "ko-KR-Standard-B",
+    "ko-KR-Standard-C",
+    "ko-KR-Standard-D",
+  ];
+  // set voice options to the selected language
+  const voices = selectedLanguage === "en-US" ? englishVoices : koreanVoices;
+
+  // for display
+  const [synthesizedLanguage, setSynthesizedLanguage] = useState('');
+  const [synthesizedVoice, setSynthesizedVoice] = useState('');
+
+  const handleLanguageChange = (language) => {
+    // set language
+    setSelectedLanguage(language);
+    const lang = language === "en-US" ? "en" : "ko";
+    // when the voice is changed set the voice to the first one
+    const firstVoice = language === "en-US" ? englishVoices[0] : koreanVoices[0];
+    setSelectedVoice(firstVoice);    
+  };
   
   const synthesizeSpeech = async () => {
     if (!inputValue) {
@@ -37,14 +76,15 @@ const TTSPage = () => {
     const requestBody = {
       input: { text: inputValue },
       voice: {
-        languageCode: 'en-US', // Choose your desired language code
-        ssmlGender: 'NEUTRAL', // Options: 'MALE', 'FEMALE', 'NEUTRAL'
+        // https://cloud.google.com/text-to-speech/docs/voices?hl=ko
+        languageCode: selectedLanguage, // Choose your desired language code
+        name: selectedVoice,
       },
       audioConfig: {
         audioEncoding: 'MP3', // Options: 'MP3', 'LINEAR16', 'OGG_OPUS'
       },
     };
-
+    
     try{
       const response = await axios.post(url, requestBody, {
         headers: {
@@ -57,6 +97,10 @@ const TTSPage = () => {
         const audioContent = result.audioContent; // Base64-encoded audio
         const uri = `data:audio/mp3;base64,${audioContent}`;
         setAudioURI(uri);
+        // set display
+        setDisplayText(inputValue);
+        setSynthesizedLanguage(selectedLanguage);
+        setSynthesizedVoice(selectedVoice);
       }
       else{
         Alert.alert('Error', 'Failed to synthesize speech.');
@@ -84,32 +128,55 @@ const TTSPage = () => {
     }
   };
 
-  React.useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-          setSound(null);
-        }
-      : undefined;
-  }, [sound]);
+  useEffect(() => {
+    // This effect runs once on mount, and the cleanup runs on unmount
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
+  }, []);
   
-  const handleButtonPress = () => {
-    setDisplayText(inputValue); // Set the value from TextInput to <Text>
-  };
-
+  
   return (
     <View style={style.container}>
+
       <View style={style.body}>
-        <Text>TTS Screen</Text>
+        {/* Language Picker */}
+        <Text>LanguageCode: {selectedLanguage}</Text>
+        <Picker
+          selectedValue={selectedLanguage}
+          onValueChange={(itemValue) => handleLanguageChange(itemValue)}
+          style={style.picker}
+          >
+          <Picker.Item label="English" value="en-US" />
+          <Picker.Item label="Korean" value="ko-KR" />
+        </Picker>
+
+        {/* Voice Picker */}
+        <Text>Voice Options</Text>
+        <Picker
+          selectedValue={selectedVoice}
+          onValueChange={(itemValue) => setSelectedVoice(itemValue)}
+          style={style.picker}
+          >
+          {voices.map((voice, index) => (
+            <Picker.Item key={index} label={voice} value={voice} />
+          ))}
+        </Picker>
+        
         <TextInput
           placeholder="Type here..."
           value={inputValue}
           onChangeText={(text) => setInputValue(text)}
+          style={style.input}
         />
-        <Button title="Set Text" onPress={handleButtonPress} ></Button>
-        <Button title="Synthesize Speech" onPress={synthesizeSpeech} />
-        <Button title="Play Audio" onPress={playAudio} disabled={!audioURI} />
+        <Button title="Synthesize Speech" onPress={synthesizeSpeech}/>
+        <Text>Current Synthesized Text:</Text>
         <Text>{displayText}</Text>
+        <Text>Synthesized Language: {synthesizedLanguage}</Text>
+        <Text>Synthesized Voice: {synthesizedVoice}</Text>
+        <Button title="Play Audio" onPress={playAudio} disabled={!audioURI} />
       </View>
       
     </View>
