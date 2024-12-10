@@ -4,11 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import style from './styles';
 import axios from 'axios';
 import { Audio } from 'expo-av';
-import { TTS_API_KEY } from '@env';
+import { TTS_API_KEY, url} from './env';
 import { Picker } from '@react-native-picker/picker';
-
-
-const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${TTS_API_KEY}`;
 
 const TTSPage = () => {
   const navigation = useNavigation();
