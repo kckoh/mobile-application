@@ -1,4 +1,4 @@
-import { ANDROID_MAP_API_KEY } from './pages/env';
+import { ANDROID_MAP_API_KEY, IOS_MAP_API_KEY } from './pages/env';
 
 export default {
     expo: {
@@ -31,7 +31,7 @@ export default {
             NSLocationWhenInUseUsageDescription: "This app uses your location to show your position on the map."
         },
         config: {
-          googleMapsApiKey: "??????"
+          googleMapsApiKey: IOS_MAP_API_KEY
         }
       },
       assetBundlePatterns: ["**/*"]
