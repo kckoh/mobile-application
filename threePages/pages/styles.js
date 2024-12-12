@@ -11,6 +11,14 @@ export const style = StyleSheet.create({
         backgroundColor: "white",
         alignItems: "center",
         justifyContent: "center",
+        borderBottomWidth: 1,
+    },
+    inputContainer: {
+        flex: 2,
+        backgroundColor: "white",
+        width: SCREEN_WIDTH,
+        alignItems: "center",
+        justifyContent: "center",
     },
     input:{
         width: SCREEN_WIDTH,

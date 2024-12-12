@@ -132,7 +132,7 @@ const TTSPage = () => {
         sound.unloadAsync();
       }
     };
-  }, []);
+  }, [sound]);
   
   
   return (
@@ -141,6 +141,9 @@ const TTSPage = () => {
       <View style={style.body}>
         {/* Language Picker */}
         <Text>LanguageCode: {selectedLanguage}</Text>
+      </View>
+
+      <View style={style.body}>
         <Picker
           selectedValue={selectedLanguage}
           onValueChange={(itemValue) => handleLanguageChange(itemValue)}
@@ -149,9 +152,14 @@ const TTSPage = () => {
           <Picker.Item label="English" value="en-US" />
           <Picker.Item label="Korean" value="ko-KR" />
         </Picker>
+      </View>
 
+      <View style={style.body}>
         {/* Voice Picker */}
         <Text>Voice Options</Text>
+      </View>
+
+      <View style={style.body}>
         <Picker
           selectedValue={selectedVoice}
           onValueChange={(itemValue) => setSelectedVoice(itemValue)}
@@ -161,7 +169,9 @@ const TTSPage = () => {
             <Picker.Item key={index} label={voice} value={voice} />
           ))}
         </Picker>
-        
+      </View>
+
+      <View style={style.inputContainer}>
         <TextInput
           placeholder="Type here..."
           value={inputValue}
@@ -169,13 +179,21 @@ const TTSPage = () => {
           style={style.input}
         />
         <Button title="Synthesize Speech" onPress={synthesizeSpeech}/>
-        <Text>Current Synthesized Text:</Text>
-        <Text>{displayText}</Text>
-        <Text>Synthesized Language: {synthesizedLanguage}</Text>
-        <Text>Synthesized Voice: {synthesizedVoice}</Text>
-        <Button title="Play Audio" onPress={playAudio} disabled={!audioURI} />
       </View>
       
+      <View style={style.body}>
+        <Text>Current Synthesized Text:</Text>
+        <Text>{displayText}</Text>
+      </View>
+
+      <View style={style.body}>
+        <Text>Synthesized Language: {synthesizedLanguage}</Text>
+        <Text>Synthesized Voice: {synthesizedVoice}</Text>
+      </View>
+
+      <View style={style.body}>
+        <Button title="Play Audio" onPress={playAudio} disabled={!audioURI} />
+      </View>
     </View>
   );
 };
