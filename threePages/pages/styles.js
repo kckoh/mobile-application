@@ -6,6 +6,9 @@ export const style = StyleSheet.create({
     container: {
         flex: 1,
     },
+    map:{
+        flex: 1,
+    },
     body: {
         flex: 1,
         backgroundColor: "white",
@@ -30,7 +33,7 @@ export const style = StyleSheet.create({
     picker:{
         width: SCREEN_WIDTH,
         height: 60,
-    }
+    },
 });
 
 export default style;

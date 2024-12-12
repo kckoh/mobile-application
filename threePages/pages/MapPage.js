@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, ActivityIndicator} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import  style  from './styles';
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker }from 'react-native-maps';
+import { useState, useEffect } from 'react';
+import {requestLocationPermission, useCurrentLocation} from './googleMapController';
 
 const MapPage = () => {
   const navigation = useNavigation();
@@ -18,13 +20,44 @@ const MapPage = () => {
     navigation.navigate('STTPage'); // Navigate to DetailsScreen
   };
 
-  return (
-    <View style={{flex:1}}>
-        <View style={style.body}>
+  const {location, error} = useCurrentLocation(); // Call the custom hook
 
-            {/* <Text>Map Screen</Text> */}
-            <MapView style={{width: '100%', height: '100%'}}></MapView>
-        </View>
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text>Error: {errorMsg}</Text>
+      </View>
+    );
+  }
+  
+  // Loading screen 
+  if (!location) {
+    return (
+      <View style={style.body}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Fetching your location...</Text>
+      </View>
+    );
+  }
+
+  const region = {
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.005, // Adjust the delta for zoom level
+    longitudeDelta: 0.005, // Adjust the delta for zoom level
+  };
+
+  return (
+    <View style={style.container}>
+      <MapView
+        style={style.map}
+        provider={PROVIDER_GOOGLE}
+        region={region}
+        showsUserLocation={true} // Shows a blue dot for user's location
+        loadingEnabled={true}
+      >
+        <Marker coordinate={{ latitude: region.latitude, longitude: region.longitude }} title="You are here" />
+      </MapView>
     </View>
   );
 };
