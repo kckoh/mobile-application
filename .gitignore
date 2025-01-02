@@ -38,3 +38,5 @@ yarn-error.*
 env.js
 .env
 pages/temp.js
+
+db.sqlite3
