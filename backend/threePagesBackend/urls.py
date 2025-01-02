@@ -1,7 +1,6 @@
 from django.urls import path, include
-from .views import MyModelView
+from .views import SpeechToTextView
 
 urlpatterns = [
-    path('items/', MyModelView.as_view(), name='items'),
-    path('api/', include('myapp.urls')),
+    path('stt/', SpeechToTextView.as_view(), name='stt'),
 ]
