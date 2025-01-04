@@ -3,7 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from google.cloud import speech
 from .models import AudioData
-from pydub import AudioSegment
 
 class SpeechToTextView(APIView):
     def post(self, request):
@@ -15,11 +14,11 @@ class SpeechToTextView(APIView):
         # 2. Save the audio file in the media folder (via your AudioData model)
         audio_obj = AudioData.objects.create(audio_file=audio_file)
         full_file_path = audio_obj.audio_file.path
-        print(full_file_path)
-        # 4. Initialize the Google Cloud Speech client
+        
+        # 3. Initialize the Google Cloud Speech client
         client = speech.SpeechClient()
 
-        # 5. Load the converted audio content
+        # 4. Load the converted audio content
         with open(full_file_path, 'rb') as f:
             content = f.read()
 
@@ -30,19 +29,17 @@ class SpeechToTextView(APIView):
             language_code="en-US"
         )
 
-        # 6. Send to Google STT
+        # 5. Send to Google STT
         response = client.recognize(request={"config": config, "audio": audio})
 
-        # 7. Parse the transcription result
+        # 6. Parse the transcription result
         transcript = ""
         for result in response.results:
             transcript += result.alternatives[0].transcript
 
         # (Optional) Delete temporary files
-        # if os.path.exists(full_file_path):
-        #     os.remove(full_file_path)
-        # if os.path.exists(converted_file_path):
-        #     os.remove(converted_file_path)
+        if os.path.exists(full_file_path):
+            os.remove(full_file_path)
 
-        # 8. Return the result
+        # . Return the result
         return Response({"transcript": transcript}, status=200)

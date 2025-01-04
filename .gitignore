@@ -40,3 +40,13 @@ env.js
 pages/temp.js
 
 db.sqlite3
+
+__pycache__/
+/media/
+
+# Local settings
+*.local_settings.py
+
+# IDE files
+.vscode/
+.idea/

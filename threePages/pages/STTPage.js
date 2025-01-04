@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import style from './styles';
@@ -13,7 +13,7 @@ const STTPage = () => {
   const goToMap = () => navigation.navigate('MapPage');
   const goToTTS = () => navigation.navigate('TTSPage');
   const goToSTT = () => navigation.navigate('STTPage');
-
+  
   const recordingOptions = {
     // https://www.youtube.com/watch?v=gcZSlMU-n48&t=40s 37:50
     ...Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY,
@@ -72,49 +72,45 @@ const STTPage = () => {
       setAudioUri(uri);
       setRecording(null);
       console.log('Recording saved at:', uri);
-
-      // Optional: auto-trigger getText() here
-      // await getText();
     } catch (error) {
       console.error('Failed to stop recording:', error);
     }
   };
-
   const getText = async () => {
-    try {
-      if (!audioUri) {
-        console.warn('No audio file to transcribe.');
-        return;
+      try {
+        if (!audioUri) {
+          console.warn('No audio file to transcribe.');
+          return;
+        }
+
+        const formData = new FormData();
+        // "audio" should match request.FILES.get('audio') in your Django view
+        formData.append('audio', {
+          uri: audioUri,
+          name: 'audio.wav', // or any valid filename
+          type: 'audio/wav', // match your recording type
+        });
+        
+        console.log("sending request");
+        
+        const response = await axios.post(JP_IP_URL, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        console.log('Response:', response.data);
+        if (response.data && response.data.transcript) {
+          setTranscription(response.data.transcript);
+        } else {
+          setTranscription('No transcript found in the response.');
+        }
+      } catch (error) {
+        console.error('Failed to get Text:', error);
+        setTranscription(`Error: ${error.message}`);
       }
-
-      const formData = new FormData();
-      // "audio" should match request.FILES.get('audio') in your Django view
-      formData.append('audio', {
-        uri: audioUri,
-        name: 'audio.wav', // or any valid filename
-        type: 'audio/wav', // match your recording type
-      });
-      
-      console.log("sending request");
-      
-      const response = await axios.post(JP_IP_URL, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      console.log('Response:', response.data);
-      if (response.data && response.data.transcript) {
-        setTranscription(response.data.transcript);
-      } else {
-        setTranscription('No transcript found in the response.');
-      }
-    } catch (error) {
-      console.error('Failed to get Text:', error);
-      setTranscription(`Error: ${error.message}`);
-    }
-  };
-
+    };
+    
   return (
     <View style={style.container}>
       <Button title="Start Recording" onPress={startRecording} />
