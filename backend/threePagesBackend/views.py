@@ -23,6 +23,7 @@ class SpeechToTextView(APIView):
             content = f.read()
 
         audio = speech.RecognitionAudio(content=content)
+        # TODO: IOS Encoding wav, Kor
         config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.AMR_WB,
             sample_rate_hertz=16000,

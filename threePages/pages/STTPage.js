@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useState, useEffect, Children } from 'react';
+import { View, Text, Button, Pressable, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import style from './styles';
 import { JP_IP_URL } from './env'; // Must point to your backend endpoint
 import { Audio } from 'expo-av';
 import axios from 'axios';
-import WebSocketComponent from './websocket';
+import {WebSocketComponent, sendAudio} from './websocket';
 
 const STTPage = () => {
   const navigation = useNavigation();
@@ -41,6 +41,7 @@ const STTPage = () => {
   const [recording, setRecording] = useState(null);
   const [audioUri, setAudioUri] = useState(null);
   const [transcription, setTranscription] = useState('');
+  const [recordingStatus, setRecordingStatus] = useState(null);
 
   const startRecording = async () => {
     try {
@@ -50,16 +51,16 @@ const STTPage = () => {
         alert('Permission to access microphone is required!');
         return;
       }
-
+      
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
-
-      // Use the built-in high-quality recording preset
+      
+      setRecordingStatus('Recording...');
       const { recording } = await Audio.Recording.createAsync(recordingOptions);
       setRecording(recording);
-      setTranscription(''); // Clear old transcription when starting a new recording
+      
     } catch (error) {
       console.error('Failed to start recording:', error);
     }
@@ -72,11 +73,13 @@ const STTPage = () => {
       const uri = recording.getURI();
       setAudioUri(uri);
       setRecording(null);
-      console.log('Recording saved at:', uri);
+      setRecordingStatus('Recording saved');
     } catch (error) {
       console.error('Failed to stop recording:', error);
     }
   };
+
+  // Google Cloud Speech-to-Text (STT) API using Axios
   const getText = async () => {
     try {
       if (!audioUri) {
@@ -112,17 +115,35 @@ const STTPage = () => {
     }
   };
 
-  WebSocketComponent();
+  WebSocketComponent(setTranscription);
     
   return (
     <View style={style.container}>
-      <Button title="Start Recording" onPress={startRecording} />
-      <Button title="Stop Recording" onPress={stopRecording} disabled={!recording} />
-      <Button title="STT" onPress={getText} disabled={!audioUri} />
-
+      {/* <Button title="Start Recording" onPress={startRecording} />
+      <Button title="Stop Recording" onPress={stopRecording} disabled={!recording} /> */}
+      <Pressable 
+        style={
+          ({pressed}) => [
+            {backgroundColor: pressed ? 'rgb(210, 230, 255)' : 'white',},
+            style.pressableButton,]}
+        onPressIn={startRecording}
+        onPressOut={stopRecording}
+      >
+        {({pressed}) => 
+          (<Text style={style.pressableButtonText}>
+            {pressed ? 'Recording' : "Press to Record"}
+          </Text>)}
+      </Pressable>
+      <Button title="STT (axios)" onPress={getText} disabled={!audioUri} />
+      <Button title="STT (WebSocket)" onPress={() => sendAudio(audioUri)} disabled={!audioUri} />
+      
+      <Text>Recording Status: {recordingStatus}</Text>
       <Text>Audio saved at: {audioUri || 'No audio yet'}</Text>
       <Text>Transcription: {transcription}</Text>
+
+      <WebSocketComponent setTranscription={setTranscription}/>
     </View>
+    
   );
 };
 

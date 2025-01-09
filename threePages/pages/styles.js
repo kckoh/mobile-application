@@ -34,6 +34,16 @@ export const style = StyleSheet.create({
         width: SCREEN_WIDTH,
         height: 60,
     },
+    pressableButton:{
+        width: SCREEN_WIDTH,
+        height: 60,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    pressableButtonText:{
+        fontSize: 22,
+    },
+
 });
 
 export default style;
