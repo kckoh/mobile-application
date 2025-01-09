@@ -5,7 +5,7 @@ import  style  from './styles';
 import MapView, { PROVIDER_GOOGLE, Marker }from 'react-native-maps';
 import { useState, useEffect } from 'react';
 import {useCurrentLocation} from './googleMapController';
-import {markers} from './markers';
+import {savedMarkers} from './markers';
 
 const MapPage = () => {
   const navigation = useNavigation();
@@ -22,7 +22,7 @@ const MapPage = () => {
   };
 
   const {location, error} = useCurrentLocation(); // Call the custom hook
-  const [markers, setMarkers] = useState([]); // Initialize the markers array
+  const [markers, setMarkers] = useState(savedMarkers); // Initialize the markers array
   const [markerCount, setMarkerCount] = useState(1); // Initialize the marker count
 
   if (error) {
@@ -47,7 +47,7 @@ const MapPage = () => {
     // my current location (gps)
     // latitude: location.latitude,
     // longitude: location.longitude,
-    
+
     // 경주
     latitude: 35.8561719,
     longitude: 129.2247477,
@@ -66,7 +66,6 @@ const MapPage = () => {
       title: "New Marker",
       description: "markerCount: " + markerCount,
     });// Add a new marker to the array
-    console.log(markers); // Log the markers array
     setMarkers([...markers]); // Update the markers array
     setMarkerCount(markerCount + 1); // Update the marker count
   };

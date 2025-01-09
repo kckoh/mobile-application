@@ -1,4 +1,4 @@
-export const markers =[
+export const savedMarkers =[
     {
         latitude:  49.100376,
         longitude:  -122.673058,
