@@ -7,6 +7,7 @@ export default {
       version: "1.0.0",
       orientation: "portrait",
       icon: "./assets/icon.png",
+      scheme: "your-app-scheme",
       splash: {
         image: "./assets/splash.png",
         resizeMode: "contain",
@@ -34,7 +35,13 @@ export default {
           googleMapsApiKey: IOS_MAP_API_KEY
         }
       },
-      assetBundlePatterns: ["**/*"]
+      assetBundlePatterns: ["**/*"],
+      experiments: {
+        typedRoutes: true
+      },
+      // web: {
+      //   bundler: "metro"
+      // },
     }
   };
   

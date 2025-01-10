@@ -55,3 +55,5 @@ export const useCurrentLocation = () => {
 
   return { location, error };
 };
+
+export default { requestLocationPermission, useCurrentLocation };

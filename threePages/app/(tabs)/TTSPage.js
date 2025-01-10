@@ -1,26 +1,12 @@
 import React, { useEffect,useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import style from './styles';
+import style from '../../fixedData/styles';
 import axios from 'axios';
 import { Audio } from 'expo-av';
-import { TTS_API_KEY, url} from './env';
+import { TTS_API_KEY, url} from '../../fixedData/env';
 import { Picker } from '@react-native-picker/picker';
 
 const TTSPage = () => {
-  const navigation = useNavigation();
-
-  const goToMap = () => {
-    navigation.navigate('MapPage'); // Navigate to DetailsScreen
-  }
-  const goToTTS = () => {
-    navigation.navigate('TTSPage'); // Navigate to DetailsScreen
-  };
-
-  const goToSTT = () => {
-    navigation.navigate('STTPage'); // Navigate to DetailsScreen
-  };
-  
   const [inputValue, setInputValue] = useState('');
   const [displayText, setDisplayText] = useState('');
   const [audioURI, setAudioURI] = useState(null);

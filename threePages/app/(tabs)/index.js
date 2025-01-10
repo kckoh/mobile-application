@@ -1,33 +1,19 @@
 import React from 'react';
 import { View, Text, ActivityIndicator} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import  style  from './styles';
+import  style  from '../../fixedData/styles';
 import MapView, { PROVIDER_GOOGLE, Marker }from 'react-native-maps';
-import { useState, useEffect } from 'react';
-import {useCurrentLocation} from './googleMapController';
-import {savedMarkers} from './markers';
+import { useState } from 'react';
+import {useCurrentLocation} from '../../components/mapComponents/googleMapController';
+import {savedMarkers} from '../../components/mapComponents/markers';
 
 const MapPage = () => {
-  const navigation = useNavigation();
-
-  const goToMap = () => {
-    navigation.navigate('MapPage'); // Navigate to DetailsScreen
-  }
-  const goToTTS = () => {
-    navigation.navigate('TTSPage'); // Navigate to DetailsScreen
-  };
-
-  const goToSTT = () => {
-    navigation.navigate('STTPage'); // Navigate to DetailsScreen
-  };
-
   const {location, error} = useCurrentLocation(); // Call the custom hook
   const [markers, setMarkers] = useState(savedMarkers); // Initialize the markers array
   const [markerCount, setMarkerCount] = useState(1); // Initialize the marker count
 
   if (error) {
     return (
-      <View style={styles.centered}>
+      <View style={style.centered}>
         <Text>Error: {errorMsg}</Text>
       </View>
     );
@@ -96,7 +82,7 @@ const MapPage = () => {
         provider={PROVIDER_GOOGLE}
         region={region}
         showsUserLocation={true} // Shows a blue dot for user's location
-        showsMyLocationButton={true} // Srhows a button to center the map on user's location
+        showsMyLocationButton={true} // Shows a button to center the map on user's location
         loadingEnabled={true}
         customMapStyle={mapStyle}
         onPress={addMarker}

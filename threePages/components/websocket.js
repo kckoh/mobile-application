@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { JP_WEB_SOCKET_URL } from './env';
+import { JP_WEB_SOCKET_URL } from '../fixedData/env';
 
 let globalSocketRef = null;
 
@@ -91,3 +91,5 @@ export const sendAudio = async (fileUri) => {
     console.error('Failed to send audio via websocket:', error);
   }
 };
+
+export default { WebSocketComponent, sendAudio, setGlobalSocketRef, getGlobalSocketRef };

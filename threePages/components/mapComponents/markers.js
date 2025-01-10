@@ -6,3 +6,5 @@ export const savedMarkers =[
         description: "This is the first marker"
     },    
 ]
+
+export default savedMarkers;

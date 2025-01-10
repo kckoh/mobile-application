@@ -1,20 +1,12 @@
 import React, { useState, useEffect, Children } from 'react';
 import { View, Text, Button, Pressable, SafeAreaView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import style from './styles';
-import { JP_IP_URL } from './env'; // Must point to your backend endpoint
+import style from '../../fixedData/styles';
+import { JP_IP_URL } from '../../fixedData/env'; // Must point to your backend endpoint
 import { Audio } from 'expo-av';
 import axios from 'axios';
-import {WebSocketComponent, sendAudio} from './websocket';
+import {WebSocketComponent, sendAudio} from '../../components/websocket';
 
 const STTPage = () => {
-  const navigation = useNavigation();
-
-  // Navigation (optional)
-  const goToMap = () => navigation.navigate('MapPage');
-  const goToTTS = () => navigation.navigate('TTSPage');
-  const goToSTT = () => navigation.navigate('STTPage');
-  
   const recordingOptions = {
     // https://www.youtube.com/watch?v=gcZSlMU-n48&t=40s 37:50
     ...Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY,
