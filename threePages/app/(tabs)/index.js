@@ -3,8 +3,8 @@ import { View, Text, ActivityIndicator} from 'react-native';
 import  style  from '../../fixedData/styles';
 import MapView, { PROVIDER_GOOGLE, Marker }from 'react-native-maps';
 import { useState } from 'react';
-import {useCurrentLocation} from '../../components/mapComponents/googleMapController';
-import {savedMarkers} from '../../components/mapComponents/markers';
+import {useCurrentLocation} from '../../controllers/mapControllers/googleMapController';
+import {savedMarkers} from '../../controllers/mapControllers/markers';
 
 const MapPage = () => {
   const {location, error} = useCurrentLocation(); // Call the custom hook

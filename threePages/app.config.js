@@ -1,4 +1,4 @@
-import { ANDROID_MAP_API_KEY, IOS_MAP_API_KEY } from './pages/env';
+import { ANDROID_MAP_API_KEY, IOS_MAP_API_KEY } from './fixedData/env';
 
 export default {
     expo: {

@@ -4,7 +4,7 @@ import style from '../../fixedData/styles';
 import { JP_IP_URL } from '../../fixedData/env'; // Must point to your backend endpoint
 import { Audio } from 'expo-av';
 import axios from 'axios';
-import {WebSocketComponent, sendAudio} from '../../components/websocket';
+import {WebSocketComponent, sendAudio} from '../../controllers/websocket/websocket';
 
 const STTPage = () => {
   const recordingOptions = {

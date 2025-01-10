@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { JP_WEB_SOCKET_URL } from '../fixedData/env';
+import { JP_WEB_SOCKET_URL } from '../../fixedData/env';
 
 let globalSocketRef = null;
 
